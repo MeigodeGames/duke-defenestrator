@@ -5,13 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class Defenestration : MonoBehaviour
 {
-    public Transform m_PontoEsquerdo;
-    public Transform m_PontoDireito;
-    public float m_Speed = 10.0f;
-
+    [SerializeField] private Transform m_PontoEsquerdo;
+    [SerializeField] private Transform m_PontoDireito;
     private LineRenderer m_Line;
-    private Vector3 m_Direction;
 
+    [Header("Target")]
+    private Vector3 m_Direction;
+    public float m_Speed = 10.0f;
     public Enemy m_Target = null;
 
     private void Awake()

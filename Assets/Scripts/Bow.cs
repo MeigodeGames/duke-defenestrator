@@ -24,15 +24,20 @@ public class Bow : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        /*
+        DrawBowstring();
+
         if (!IsReady()) return;
         Pull();
         ShootArrow();
-        */
     }
 
+    private void DrawBowstring()
+    {
+        if (!m_CurrentArrow) m_Bowstring.DrawBowstring(m_ArrowSpawn.transform);
+        else m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
+    }
 
     [ContextMenu("Shoot Arrow")]
     private void ShootArrow()
@@ -44,29 +49,25 @@ public class Bow : MonoBehaviour
         var direction = m_CurrentArrow.transform.forward;
         var position = m_CurrentArrow.transform.position;
         */
-        var endPosition = m_ArrowSpawn.position;
+        //var endPosition = m_ArrowSpawn.position;
 
-        m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
-
-        Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)}");
+        //Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)}");
 
         m_CurrentArrow.Fire();
 
-        Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)}");
+        //Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)}");
 
+        /*
         var scapeVar = 0.0f;
-        while (Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f && scapeVar < 50.0f)
+        while (Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f && scapeVar < 15000.0f)
         {
             scapeVar++;
-            Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)}");
+            Debug.Log($"Position: {m_CurrentArrow.transform.position} | endPosition: {endPosition} | Distance: {Vector3.Distance(m_CurrentArrow.transform.position, endPosition)} | ShouldDraw?: {(Vector3.Distance(m_CurrentArrow.transform.position, endPosition) > 0.1f)} | Repetition: {scapeVar}");
             m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
         }
-        
+        */
 
         m_CurrentArrow = null;
-
-        m_Bowstring.DrawBowstring(m_ArrowSpawn);
-
         m_IsDrawn = false;
         Reload();
     }
@@ -74,31 +75,21 @@ public class Bow : MonoBehaviour
     [ContextMenu("Pull Arrow")]
     private void Pull()
     {
-        Debug.Log($"Pull");
         if (m_IsDrawn) return;
 
         var direction = m_CurrentArrow.transform.forward;
         var position = m_CurrentArrow.transform.position;
 
-        var endPosition = position - direction * m_DrawDistance;
+        var endPosition = m_ArrowSpawn.position - direction * m_DrawDistance;
 
-        //Debug.Log($"Position: {position} | endPosition: {endPosition} | Distance: {Vector3.Distance(position, endPosition)} | ShouldPull?: {(Vector3.Distance(position, endPosition) < 0.1f)}");
-
-        //m_CurrentArrow.m_Body.MovePosition(endPosition);
-        m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
-
-        while (Vector3.Distance(position, endPosition) > 0.1f)
+        if (Vector3.Distance(position, endPosition) > 0.1f)
         {
-            //Debug.Log("Pulling");
-            Debug.Log($"Position: {position} | endPosition: {endPosition} | Distance: {Vector3.Distance(position, endPosition)} | ShouldPull?: {(Vector3.Distance(position, endPosition) < 0.1f)}");
-            position -= direction * m_DrawSpeed * Time.deltaTime;
+            position -= direction * m_DrawSpeed * Time.fixedDeltaTime;
 
             m_CurrentArrow.m_Body.MovePosition(position);
-            m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
+            //m_Bowstring.DrawBowstring(m_CurrentArrow.transform);
         }
-        
-
-        m_IsDrawn = true;
+        else m_IsDrawn = true;
     }
 
 
@@ -116,7 +107,6 @@ public class Bow : MonoBehaviour
         yield return new WaitForSeconds(m_ReloadTime);
 
         m_CurrentArrow = Instantiate(m_ArrowPrefab, m_ArrowSpawn.position, m_ArrowSpawn.rotation);
-        m_Bowstring.DrawBowstring(m_ArrowSpawn);
 
         m_CurrentArrow.m_Body.isKinematic = true;
 
