@@ -11,13 +11,13 @@ public class Bowstring : MonoBehaviour
     {
         m_Bowstring = GetComponent<LineRenderer>();
         m_Bowstring.positionCount = m_Points.Length;
-
-        for (int i = 0; i < m_Points.Length; i++)
-            m_Bowstring.SetPosition(i, m_Points[i].position);
     }
 
-    public void DrawBowstring(Transform arrowPosition)
+    public void DrawBowstring(Transform arrowPosition) => m_Points[1] = arrowPosition;
+
+    private void FixedUpdate()
     {
-        m_Bowstring.SetPosition(1, arrowPosition.position);
+        for (int i = 0; i < m_Points.Length; i++)
+            m_Bowstring.SetPosition(i, m_Points[i].position);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class HealthBar : MonoBehaviour
+public class HealthBarOld : MonoBehaviour
 {
     public Image m_BarUI;
     public Text m_TextUI;

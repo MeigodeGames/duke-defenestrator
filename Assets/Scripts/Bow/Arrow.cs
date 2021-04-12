@@ -5,53 +5,68 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     public Rigidbody m_Body;
-    private bool m_HasHit = true;
-    public float m_ArrowForce = 50.0f;
+    private bool m_IsFlying = false;
+    //private bool m_HasHit = true;
+    [SerializeField] private float m_Damage = 10;
 
 
-    // Start is called before the first frame update
     private void Awake()
     {
         m_Body = GetComponent<Rigidbody>();
-        //m_Body.rotation = Quaternion.LookRotation(m_Body.velocity);
+        m_Body.isKinematic = true;
     }
 
-    // Update is called once per frame
     private void FixedUpdate()
     {
+        /*
         if (m_HasHit) return;
 
-        //Debug.Log($"{m_Body.velocity} | {transform.up}");
-
         if (m_Body.velocity != Vector3.zero) m_Body.MoveRotation(Quaternion.LookRotation(m_Body.velocity, transform.up));
+        */
 
-        //m_Body.rotation = Quaternion.LookRotation(m_Body.velocity);
+        if (!m_IsFlying) return;
+        m_Body.MoveRotation(Quaternion.LookRotation(m_Body.velocity, transform.up));
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Stop(other.transform);
+
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<Health>().Damage(m_Damage);
+        }
     }
 
     private void Stop(Transform newParent)
     {
-        m_HasHit = true;
+        //m_HasHit = true;
 
         //m_Body.velocity = Vector3.zero;
         //m_Body.angularVelocity = Vector3.zero;
         m_Body.constraints = RigidbodyConstraints.FreezeAll;
         m_Body.isKinematic = true;
+        m_IsFlying = false;
 
         transform.SetParent(newParent);
         
         Destroy(gameObject, 2.0f);
     }
 
-    public void Fire()
+    public void Fire(float force)
     {
         m_Body.isKinematic = false;
-        m_Body.AddForce(transform.forward * m_ArrowForce);
+        m_Body.AddForce(transform.forward * force);
+        m_IsFlying = true;
 
-        m_HasHit = false;
+        transform.SetParent(null);
+
+        //m_HasHit = false;
+    }
+
+    public void Fire(float force, float damageMultiplier)
+    {
+        m_Damage *= damageMultiplier;
+        Fire(force);
     }
 }
