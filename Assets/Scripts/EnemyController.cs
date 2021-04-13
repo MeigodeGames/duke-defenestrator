@@ -4,8 +4,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Rigidbody))]
+
 public class EnemyController : MonoBehaviour
 {
+    public Window m_WindowTest;
     public Rigidbody m_Body;
     private Health m_Health;
 
@@ -16,4 +18,17 @@ public class EnemyController : MonoBehaviour
     }
 
     public bool IsDefenestrable => m_Health.IsZero;
+
+    public void Defenestrate(Window window)
+    {
+        if (!IsDefenestrable) return;
+
+        gameObject.AddComponent<DefenestrateEnemy>().DrawLine(window);
+    }
+
+    [ContextMenu("Defenestrate")]
+    private void DefenestrateTest()
+    {
+        Defenestrate(m_WindowTest);
+    }
 }
