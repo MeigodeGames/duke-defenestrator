@@ -59,6 +59,7 @@ public class Bow : MonoBehaviour
         }
         else
         {
+            Debug.Log("Shooting the arrow");
             // Shoot the arrow
             m_CurrentArrow.Fire(m_Power);
             m_CurrentArrow = null;
@@ -80,36 +81,6 @@ public class Bow : MonoBehaviour
         m_IsShooting = true;
     }
 
-    /*
-    [ContextMenu("Shoot Arrow")]
-    private void ShootArrow()
-    {
-        
-        if (!m_IsDrawn) return;
-
-        m_CurrentArrow.Fire();
-        m_CurrentArrow = null;
-        m_IsDrawn = false;
-
-        Reload();
-    }
-
-    [ContextMenu("Pull Arrow")]
-    private void Pull()
-    {
-        if (m_IsDrawn) return;
-
-        Vector3 position = m_CurrentArrow.transform.position;
-        Vector3 endPosition = m_ArrowPull.position;
-
-        if (Vector3.Distance(position, endPosition) > 0.1f)
-        {
-            Vector3 step = (endPosition - position) * m_DrawSpeed * Time.fixedDeltaTime;
-            m_CurrentArrow.m_Body.MovePosition(position + step);
-        }
-        else m_IsDrawn = true;
-    }
-    */
 
     [ContextMenu("Reload")]
     public void Reload()

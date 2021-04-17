@@ -7,11 +7,13 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(MovePlayer))]
 [RequireComponent(typeof(JumpPlayer))]
 [RequireComponent(typeof(DashPlayer))]
+[RequireComponent(typeof(AttackPlayer))]
 public class PlayerController : MonoBehaviour
 {
     private MovePlayer m_MoveBehaviour;
     private JumpPlayer m_JumpBehaviour;
     private DashPlayer m_DashBehaviour;
+    private AttackPlayer m_AttackBehaviour;
 
     //public PlayerInput m_PlayerInput;
     //public InputAction m_JumpAction;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
         m_MoveBehaviour = GetComponent<MovePlayer>();
         m_JumpBehaviour = GetComponent<JumpPlayer>();
         m_DashBehaviour = GetComponent<DashPlayer>();
+        m_AttackBehaviour = GetComponent<AttackPlayer>();
 
         //m_PlayerInput = GetComponent<PlayerInput>();
         //m_JumpAction = m_PlayerInput.actions["Jump"];
@@ -73,5 +76,12 @@ public class PlayerController : MonoBehaviour
         m_DashBehaviour.IsDashing = value.isPressed;
 
         Debug.Log("Dash");
+    }
+
+    public void OnAttack(InputValue value)
+    {
+        m_AttackBehaviour.IsAttacking = value.isPressed;
+
+        Debug.Log("Attack");
     }
 }

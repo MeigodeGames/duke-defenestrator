@@ -31,4 +31,9 @@ public class EnemyController : MonoBehaviour
     {
         Defenestrate(m_WindowTest);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Hit - Enemy");
+    }
 }
